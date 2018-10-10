@@ -28,15 +28,20 @@ conda:
 	conda config --add channels conda-forge
 
 conda-install: conda
-	conda install -y -c conda-forge awscli=1.16.29
+	conda install -y -c conda-forge awscli=1.16.29 # boto3=1.9.13
 
 conda-search:
-	conda search -c conda-forge awscli
+	conda search -c anaconda boto3
 
 # ~~~~~ RUN ~~~~~ #
 CONFIG:=../config/s3-config.sh
 INDIR:=test-data
-OUTDIR:=
+OUTDIR:=test-output
 upload:
-	. "$(CONFIG)" && \
+	@. "$(CONFIG)" && \
 	aws s3 sync "$(INDIR)" "$${AWS_BUCKET_URI}" --exclude '*.DS_Store*'
+
+download:
+	@. "$(CONFIG)" && \
+	mkdir -p "$(OUTDIR)" && \
+	aws s3 sync "$${AWS_BUCKET_URI}" "$(OUTDIR)"
