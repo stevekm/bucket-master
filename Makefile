@@ -32,3 +32,11 @@ conda-install: conda
 
 conda-search:
 	conda search -c conda-forge awscli
+
+# ~~~~~ RUN ~~~~~ #
+CONFIG:=../config/s3-config.sh
+INDIR:=test-data
+OUTDIR:=
+upload:
+	. "$(CONFIG)" && \
+	aws s3 sync "$(INDIR)" "$${AWS_BUCKET_URI}" --exclude '*.DS_Store*'
